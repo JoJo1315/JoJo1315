@@ -1,0 +1,179 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyOlDN+geFTKnl2Nj9ByH1E4",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/JoJo1315/JoJo1315/blob/main/AI%20Tumor%20Detetction\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 31,
+      "metadata": {
+        "id": "N6fTY8DY0ZVQ"
+      },
+      "outputs": [],
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "dataset = pd.read_csv('cancer.csv')"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "x = dataset.drop(columns=[\"diagnosis(1=m, 0=b)\"])\n",
+        "# X is going to be everything but our diagnosis column"
+      ],
+      "metadata": {
+        "id": "awcdteEJ1mXb"
+      },
+      "execution_count": 32,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "y = dataset['diagnosis(1=m, 0=b)']\n",
+        "# Y is taking in our diagnosis column"
+      ],
+      "metadata": {
+        "id": "oRAxbCtx20_8"
+      },
+      "execution_count": 33,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.model_selection import train_test_split\n",
+        "#Going to split up data between test and training\n",
+        "\n",
+        "x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2)"
+      ],
+      "metadata": {
+        "id": "QAbaVIDm46s7"
+      },
+      "execution_count": 34,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import tensorflow as tf\n",
+        "\n",
+        "model = tf.keras.models.Sequential()\n"
+      ],
+      "metadata": {
+        "id": "YKMcIxBR6HBZ"
+      },
+      "execution_count": 35,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Input layer\n",
+        "model.add(tf.keras.layers.Dense(256, input_shape = x_train.shape[1:], activation='sigmoid'))\n",
+        "#Creating the neural network. This is also our import layer. Input something with the\n",
+        "# shape of the x_train. Lastly we're going to plot the output\n",
+        "model.add(tf.keras.layers.Dense(256, activation='sigmoid')) # Adding another layer\n",
+        "#Output Layer\n",
+        "model.add(tf.keras.layers.Dense(1, activation='sigmoid')) #Only need 1 value for our diagnosis\n",
+        "\n",
+        "\n"
+      ],
+      "metadata": {
+        "id": "wQIZtLB76onh"
+      },
+      "execution_count": 37,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Compiling our model\n",
+        "model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])"
+      ],
+      "metadata": {
+        "id": "EfG5rOOR8vy0"
+      },
+      "execution_count": 38,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model.fit(x_train, y_train, epochs=600)"
+      ],
+      "metadata": {
+        "id": "wWGRAv2p9IgU"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model.evaluate(x_test, y_test)\n",
+        "#Comparing what the model thinks y_test should be vs what y_test actually is"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "L-vtJWV2A3ye",
+        "outputId": "5996d5e4-f8d4-482d-8f97-7354e71be8f7"
+      },
+      "execution_count": 40,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "4/4 [==============================] - 0s 8ms/step - loss: 0.1967 - accuracy: 0.9386\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[0.1967194825410843, 0.9385964870452881]"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 40
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "4cSVFyj6BYso"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
